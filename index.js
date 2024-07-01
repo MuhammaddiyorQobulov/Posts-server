@@ -7,8 +7,8 @@ const DB_URL =
   "mongodb+srv://user:user@nodejs.4z0f8vg.mongodb.net/?retryWrites=true&w=majority&appName=Nodejs";
 const PORT = process.env.PORT || 5002;
 const app = express();
-app.use(cors());
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static("pictures"));
 app.use(fileUpload({}));
