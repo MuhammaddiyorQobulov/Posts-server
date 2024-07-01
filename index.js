@@ -1,9 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import postRouter from "./Router/post.js";
-import authRouter from "./Router/auth.js";
-import sponsorsRouter from "./Router/sponsor.js";
-import paymentsRouter from "./Router/payment.js";
+import { routers } from "./Router/index.js";
 import fileUpload from "express-fileupload";
 import cors from "cors";
 const DB_URL =
@@ -15,11 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("pictures"));
 app.use(fileUpload({}));
-app.post("/");
-app.use("/api/posts", postRouter);
-app.use("/api/sponsors", sponsorsRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/payments", paymentsRouter);
+routers.map(({ path, router }) => app.use(path, router));
 const startApp = async () => {
   try {
     await mongoose.connect(DB_URL, {
