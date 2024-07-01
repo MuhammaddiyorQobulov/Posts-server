@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
-import router from "./router.js";
+import postRouter from "./Router/post.js";
+import authRouter from "./Router/auth.js";
 import fileUpload from "express-fileupload";
 import cors from "cors";
 const DB_URL =
@@ -12,8 +13,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("pictures"));
 app.use(fileUpload({}));
-app.use("/api", router);
 app.post("/");
+app.use("/api/posts", postRouter);
+app.use("/api/auth", authRouter);
 const startApp = async () => {
   try {
     await mongoose.connect(DB_URL, {
