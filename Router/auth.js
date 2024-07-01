@@ -1,6 +1,8 @@
 import Router from "express";
 import AuthController from "../Auth/AuthController.js";
 import { check } from "express-validator";
+import authMiddleWaree from "../middlewaree/auth.js";
+import roleMiddleWaree from "../middlewaree/role.js";
 const authRouter = new Router();
 
 authRouter.post(
@@ -15,6 +17,10 @@ authRouter.post(
   AuthController.registration
 );
 authRouter.post("/login", AuthController.login);
-authRouter.get("/users", AuthController.getUsers);
+authRouter.get(
+  "/users",
+  roleMiddleWaree(["USER", "ADMIN"]),
+  AuthController.getUsers
+);
 
 export default authRouter;
