@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import SponsorService from "./SponsorService.js";
+import Payment from "../PaymentType/Payment.js";
 
 class SponsorController {
   async create(req, res) {
@@ -8,7 +9,14 @@ class SponsorController {
       return res.status(400).json({ message: "Access denied", errors });
     }
     try {
-      const sponsor = await SponsorService.create(req.body);
+      const paymentType = await Payment.findOne({ id: req.body.payment_type });
+      if (!paymentType) {
+        return res.status(400).json({ message: "Payment type not found" });
+      }
+      const sponsor = await SponsorService.create({
+        ...req.body,
+        payment_type: paymentType,
+      });
       res.json(sponsor);
     } catch (e) {
       res.status(500).json(e.message);
