@@ -1,5 +1,5 @@
 import Router from "express";
-import SponsorController from "../Sponsor/SponsorController.js";
+import SponsorController from "../api/Sponsor/SponsorController.js";
 import { check } from "express-validator";
 const sponsorsRouter = new Router();
 
