@@ -11,7 +11,7 @@ const Sponsor = new mongoose.Schema({
     },
   ],
   firm: { type: String, default: "" },
-  spent: { type: String, default: "" },
+  spent: { type: String, default: 0 },
   comment: { type: String, default: "" },
   created_at: { type: Date, default: Date.now() },
   get_status_display: { type: String, default: "Yangi" },

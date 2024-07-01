@@ -1,5 +1,4 @@
 import StudentsService from "./StudentsService.js";
-
 class StudentsController {
   async create(req, res) {
     try {
