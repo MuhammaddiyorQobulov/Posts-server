@@ -4,6 +4,7 @@ import sponsorsRouter from "./sponsor.js";
 import studentsRouter from "./students.js";
 import paymentsRouter from "./payment.js";
 import institutesRouter from "./institutes.js";
+import studentSponsorRouter from "./studentSponsor.js";
 
 export const routers = [
   {
@@ -29,5 +30,9 @@ export const routers = [
   {
     path: "/api/institute-list",
     router: institutesRouter,
+  },
+  {
+    path: "/api/student-sponsor",
+    router: studentSponsorRouter,
   },
 ];

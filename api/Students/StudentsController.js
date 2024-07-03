@@ -1,8 +1,16 @@
+import StudentSponsor from "../StudentSponsor/StudentSponsor.js";
 import StudentsService from "./StudentsService.js";
 class StudentsController {
   async create(req, res) {
     try {
       const student = await StudentsService.create(req.body);
+      await StudentSponsor.create({
+        full_name: student.full_name,
+        given: student.given,
+        _id: student._id,
+        get_status_display: student.get_status_display,
+        sponsors: [],
+      });
       res.json(student);
     } catch (e) {
       res.status(500).json(e.message);
