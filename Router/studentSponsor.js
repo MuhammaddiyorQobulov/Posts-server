@@ -5,5 +5,6 @@ const studentSponsorRouter = new Router();
 studentSponsorRouter.get("", StudentSponsorController.getAll);
 studentSponsorRouter.get("/:id", StudentSponsorController.getOne);
 studentSponsorRouter.post("/:id", StudentSponsorController.create);
+studentSponsorRouter.delete("/:id", StudentSponsorController.delete);
 
 export default studentSponsorRouter;
