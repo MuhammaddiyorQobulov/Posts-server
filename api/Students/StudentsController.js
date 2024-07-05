@@ -1,14 +1,22 @@
 import StudentSponsor from "../StudentSponsor/StudentSponsor.js";
 import StudentsService from "./StudentsService.js";
+import Institutes from "../Institutes/Institutes.js";
 class StudentsController {
   async create(req, res) {
     try {
-      const student = await StudentsService.create(req.body);
+      const student = await StudentsService.create({
+        full_name: req.body.full_name,
+        contract: req.body.contract,
+        phone: req.body.phone,
+        type: req.body.type,
+        institute: await Institutes.findOne({ id: req.body.institute }),
+      });
+
       await StudentSponsor.create({
-        full_name: student.full_name,
-        given: student.given,
+        full_name: req.body.full_name,
+        given: 0,
+        get_status_display: "Yangi",
         _id: student._id,
-        get_status_display: student.get_status_display,
         sponsors: [],
       });
       res.json(student);
