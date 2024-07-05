@@ -72,10 +72,10 @@ class StudentSponsorController {
 
       let given = student.given;
       const sponsors = studentSponsor.sponsors.filter((s) => {
-        if (s._id == req.body.sponsorId) {
+        if (s._id == req.query.sponsorId) {
           given = given - s.summa;
         }
-        return s._id !== req.body.sponsorId;
+        return s._id !== req.query.sponsorId;
       });
 
       await Student.updateOne(
