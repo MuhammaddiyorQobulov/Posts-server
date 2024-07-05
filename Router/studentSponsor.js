@@ -6,5 +6,6 @@ studentSponsorRouter.get("", StudentSponsorController.getAll);
 studentSponsorRouter.get("/:id", StudentSponsorController.getOne);
 studentSponsorRouter.post("/:id", StudentSponsorController.create);
 studentSponsorRouter.delete("/:id", StudentSponsorController.delete);
+studentSponsorRouter.put("/:id", StudentSponsorController.update);
 
 export default studentSponsorRouter;
