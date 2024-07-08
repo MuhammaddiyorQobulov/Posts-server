@@ -32,14 +32,19 @@ class SponsorController {
   }
   async getAll(req, res) {
     try {
-      const { page, size } = req.query;
+      const { page = 1, size = 10, search = "" } = req.query;
       const sponsors = await SponsorService.getAll();
-      const paginatedSponsors= {
-        sponsors: sponsors.slice((page - 1) * size, page * size),
-        count: sponsors.length,
+      const searchedSponsors = sponsors.filter((sponsor) =>
+        sponsor.full_name.includes(search)
+      );
+
+      const paginatedSponsors = {
+        sponsors: searchedSponsors.slice((page - 1) * size, page * size),
+        count: searchedSponsors.length,
         page: parseInt(page),
         size: parseInt(size),
-      }
+        search,
+      };
       res.json(paginatedSponsors);
     } catch (e) {
       res.status(500).json(e.message);

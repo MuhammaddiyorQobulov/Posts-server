@@ -27,13 +27,17 @@ class StudentsController {
 
   async getAll(req, res) {
     try {
-      const { page, size } = req.query;
+      const { page = 1, size = 10, search = "" } = req.query;
       const students = await StudentsService.getAll();
+      const searchedStudents = students.filter((student) =>
+        student.full_name.includes(search)
+      );
       const paginatedStudents = {
-        students: students.slice((page - 1) * size, page * size),
-        count: students.length,
+        students: searchedStudents.slice((page - 1) * size, page * size),
+        count: searchedStudents.length,
         page: parseInt(page),
         size: parseInt(size),
+        search,
       };
       res.json(paginatedStudents);
     } catch (e) {
