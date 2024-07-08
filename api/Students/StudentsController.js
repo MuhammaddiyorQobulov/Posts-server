@@ -27,8 +27,15 @@ class StudentsController {
 
   async getAll(req, res) {
     try {
+      const { page, size } = req.query;
       const students = await StudentsService.getAll();
-      res.json(students);
+      const paginatedStudents = {
+        students: students.slice((page - 1) * size, page * size),
+        count: students.length,
+        page: parseInt(page),
+        size: parseInt(size),
+      };
+      res.json(paginatedStudents);
     } catch (e) {
       res.status(500).json(e.message);
     }

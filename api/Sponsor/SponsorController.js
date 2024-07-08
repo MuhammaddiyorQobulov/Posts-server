@@ -32,8 +32,15 @@ class SponsorController {
   }
   async getAll(req, res) {
     try {
+      const { page, size } = req.query;
       const sponsors = await SponsorService.getAll();
-      res.json(sponsors);
+      const paginatedSponsors= {
+        sponsors: sponsors.slice((page - 1) * size, page * size),
+        count: sponsors.length,
+        page: parseInt(page),
+        size: parseInt(size),
+      }
+      res.json(paginatedSponsors);
     } catch (e) {
       res.status(500).json(e.message);
     }
