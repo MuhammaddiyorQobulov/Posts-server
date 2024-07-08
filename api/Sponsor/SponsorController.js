@@ -41,7 +41,7 @@ class SponsorController {
       } = req.query;
       const sponsors = await SponsorService.getAll();
       const searchedSponsors = sponsors.filter((sponsor) =>
-        sponsor.full_name.includes(search)
+        sponsor.full_name.toLowerCase().includes(search)
       );
 
       const filteredSponsors = searchedSponsors.filter((sponsor) => {

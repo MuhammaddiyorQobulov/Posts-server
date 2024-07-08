@@ -29,7 +29,7 @@ class StudentsController {
       } = req.query;
       const students = await StudentsService.getAll();
       const searchedStudents = students.filter((student) =>
-        student.full_name.includes(search)
+        student.full_name.toLowerCase().includes(search)
       );
 
       const filteredStudents = searchedStudents.filter((student) => {
