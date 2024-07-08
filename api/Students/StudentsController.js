@@ -12,13 +12,6 @@ class StudentsController {
         institute: await Institutes.findOne({ id: req.body.institute }),
       });
 
-      await StudentSponsor.create({
-        full_name: req.body.full_name,
-        given: 0,
-        get_status_display: "Yangi",
-        _id: student._id,
-        sponsors: [],
-      });
       res.json(student);
     } catch (e) {
       res.status(500).json(e.message);
@@ -27,14 +20,30 @@ class StudentsController {
 
   async getAll(req, res) {
     try {
-      const { page = 1, size = 10, search = "" } = req.query;
+      const {
+        page = 1,
+        size = 10,
+        search = "",
+        filterByInstitute = "",
+        filterByType = "",
+      } = req.query;
       const students = await StudentsService.getAll();
       const searchedStudents = students.filter((student) =>
         student.full_name.includes(search)
       );
+
+      const filteredStudents = searchedStudents.filter((student) => {
+        if (filterByInstitute) {
+          return student.institute.id == filterByInstitute;
+        }
+        if (filterByType) {
+          return student.type == filterByType;
+        }
+        return student;
+      });
       const paginatedStudents = {
-        students: searchedStudents.slice((page - 1) * size, page * size),
-        count: searchedStudents.length,
+        students: filteredStudents.slice((page - 1) * size, page * size),
+        count: filteredStudents.length,
         page: parseInt(page),
         size: parseInt(size),
         search,

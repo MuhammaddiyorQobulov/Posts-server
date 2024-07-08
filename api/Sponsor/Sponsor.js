@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const Sponsor = new mongoose.Schema({
   full_name: { type: String, required: true },
   phone: { type: String, required: true },
-  sum: { type: Number, default: 0 },
+  sum: { type: String, default: 0 },
   payment_type: [
     {
       id: { type: Number, required: true },
