@@ -19,11 +19,19 @@ class AuthController {
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Registration error", errors });
       }
-      const { username, password } = req.body;
+      const { username, password, confirm } = req.body;
       const condidate = await User.findOne({ username });
 
       if (condidate) {
         return res.status(400).json({ message: "User already exists" });
+      }
+      if (!confirm) {
+        return res
+          .status(400)
+          .json({ message: "Please confirm your password" });
+      }
+      if (password !== confirm) {
+        return res.status(400).json({ message: "Passwords are not equal" });
       }
       const hashPassword = bcrypt.hashSync(password, 7);
       const userRole = await Role.findOne({ value: "USER" });
@@ -32,8 +40,9 @@ class AuthController {
         password: hashPassword,
         roles: [userRole.value],
       });
+      const token = generateAccessToken(user._id, user.roles);
       await user.save();
-      return res.json({ message: "User created" });
+      return res.json({ token });
     } catch (e) {
       console.log(e.message);
       res.status(400).json({ message: "Registration error" });
