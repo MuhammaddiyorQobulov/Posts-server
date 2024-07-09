@@ -12,6 +12,14 @@ class StudentsController {
         institute: await Institutes.findOne({ id: req.body.institute }),
       });
 
+      await StudentSponsor.create({
+        full_name: req.body.full_name,
+        get_status_display: "Yangi",
+        given: 0,
+        _id: student._id,
+        sponsors: [],
+      });
+
       res.json(student);
     } catch (e) {
       res.status(500).json(e.message);

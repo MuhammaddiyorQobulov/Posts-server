@@ -1,3 +1,4 @@
+import StudentSponsor from "../StudentSponsor/StudentSponsor.js";
 import Student from "./Student.js";
 class StudentsService {
   async create(student) {
@@ -17,6 +18,7 @@ class StudentsService {
   }
 
   async delete(id) {
+    await StudentSponsor.deleteOne({ _id: id });
     return await Student.deleteOne({ _id: id });
   }
 }

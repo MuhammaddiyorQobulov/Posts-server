@@ -26,9 +26,7 @@ class StudentSponsorController {
       const student = await Student.findById(req.body.student);
 
       if (!student || !sponsor || !studentSponsor) {
-        return res
-          .status(400)
-          .json({ message: "Sponsor or student not found" });
+        return res.status(400).json({ student, sponsor, studentSponsor });
       }
       const summa = await StudentSponsor.updateOne(
         { _id: studentSponsor._id },
@@ -61,6 +59,61 @@ class StudentSponsorController {
       );
 
       res.json(summa);
+    } catch (e) {
+      res.status(500).json(e.message);
+    }
+  }
+
+  async update(req, res) {
+    try {
+      const sponsor = await Sponsor.findById(req.query.sponsorId);
+      const studentSponsor = await StudentSponsor.findById(req.params.id);
+      const student = await Student.findById(req.params.id);
+      const sponsors = studentSponsor.sponsors.filter(
+        (s) => s._id !== req.query.sponsorId
+      );
+      if (!sponsor || !studentSponsor || !student || !sponsors) {
+        return res
+          .status(400)
+          .json({ message: "Sponsor or student not found" });
+      }
+      const updatedStudentSponsor = await StudentSponsor.findByIdAndUpdate(
+        req.params.id,
+        {
+          sponsors: [
+            ...sponsors,
+            {
+              _id: sponsor._id,
+              summa: req.body.summa,
+              sponsor: {
+                _id: sponsor._id,
+                full_name: sponsor.full_name,
+              },
+            },
+          ],
+        }
+      );
+      await Sponsor.updateOne(
+        { _id: sponsor._id },
+        {
+          spent:
+            sponsor.spent -
+            (studentSponsor.sponsors.find((s) => s._id == req.query.sponsorId)
+              .summa -
+              req.body.summa),
+        }
+      );
+      await Student.updateOne(
+        { _id: req.params.id },
+        {
+          given:
+            student.given -
+            (studentSponsor.sponsors.find((s) => s._id == req.query.sponsorId)
+              .summa -
+              req.body.summa),
+        }
+      );
+      res.json(updatedStudentSponsor);
     } catch (e) {
       res.status(500).json(e.message);
     }
@@ -108,58 +161,6 @@ class StudentSponsorController {
         }
       );
       res.json(summa);
-    } catch (e) {
-      res.status(500).json(e.message);
-    }
-  }
-
-  async update(req, res) {
-    try {
-      const sponsor = await Sponsor.findById(req.query.sponsorId);
-      const studentSponsor = await StudentSponsor.findById(req.params.id);
-      const student = await Student.findById(req.params.id);
-      const sponsors = studentSponsor.sponsors.filter(
-        (s) => s._id !== req.query.sponsorId
-      );
-      if (!sponsor || !studentSponsor || !student || !sponsors) {
-        return res
-          .status(400)
-          .json({ message: "Sponsor or student not found" });
-      }
-      const updatedStudentSponsor = await StudentSponsor.findByIdAndUpdate(req.params.id, {
-        sponsors: [
-          ...sponsors,
-          {
-            _id: sponsor._id,
-            summa: req.body.summa,
-            sponsor: {
-              _id: sponsor._id,
-              full_name: sponsor.full_name,
-            },
-          },
-        ],
-      });
-      await Sponsor.updateOne(
-        { _id: sponsor._id },
-        {
-          spent:
-            sponsor.spent -
-            (studentSponsor.sponsors.find((s) => s._id == req.query.sponsorId)
-              .summa -
-              req.body.summa),
-        }
-      );
-      await Student.updateOne(
-        { _id: req.params.id },
-        {
-          given:
-            student.given -
-            (studentSponsor.sponsors.find((s) => s._id == req.query.sponsorId)
-              .summa -
-              req.body.summa),
-        }
-      );
-      res.json(updatedStudentSponsor);
     } catch (e) {
       res.status(500).json(e.message);
     }
