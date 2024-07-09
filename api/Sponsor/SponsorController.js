@@ -49,7 +49,7 @@ class SponsorController {
           return sponsor.get_status_display == filterByStatus;
         }
         if (filterBySum) {
-          return sponsor.given == filterBySum;
+          return sponsor.sum == filterBySum;
         }
         return sponsor;
       });

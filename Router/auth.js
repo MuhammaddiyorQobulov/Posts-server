@@ -19,7 +19,7 @@ authRouter.post(
 authRouter.post("/login", AuthController.login);
 authRouter.get(
   "/users",
-  roleMiddleWaree(["ADMIN"]),
+  roleMiddleWaree(["ADMIN", "USER"]),
   AuthController.getUsers
 );
 
